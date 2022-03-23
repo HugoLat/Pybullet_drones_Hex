@@ -113,6 +113,12 @@ class BaseAviary(gym.Env):
         self.NUM_DRONES = num_drones
         self.NEIGHBOURHOOD_RADIUS = neighbourhood_radius
         #### Options ###############################################
+        #### Options ###############################################
+        self.DRONE_MODEL = drone_model
+        if self.DRONE_MODEL in [DroneModel.CF2X, DroneModel.CF2P, DroneModel.HB]:
+            self.nb_prop = 4
+        elif self.DRONE_MODEL == DroneModel.CF26:
+            self.nb_prop = 6
         self.DRONE_MODEL = drone_model
         self.GUI = gui
         self.RECORD = record
@@ -122,7 +128,6 @@ class BaseAviary(gym.Env):
         self.URDF = self.DRONE_MODEL.value + ".urdf"
         #### Load the drone properties from the .urdf file #########
         self.M, \
-        self.nb_prop,\
         self.L, \
         self.THRUST2WEIGHT_RATIO, \
         self.J, \
@@ -1007,7 +1012,6 @@ class BaseAviary(gym.Env):
         """
         URDF_TREE = etxml.parse(os.path.dirname(os.path.abspath(__file__))+"/../assets/"+self.URDF).getroot()
         M = float(URDF_TREE[1][0][1].attrib['value'])
-        nb_prop = int(URDF_TREE[0].attrib['nb_prop'])
         L = float(URDF_TREE[0].attrib['arm'])
         THRUST2WEIGHT_RATIO = float(URDF_TREE[0].attrib['thrust2weight'])
         IXX = float(URDF_TREE[1][0][2].attrib['ixx'])
